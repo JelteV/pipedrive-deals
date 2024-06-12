@@ -7,15 +7,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class DealDenormalizer implements DenormalizerInterface
 {
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Deal
     {
         $dealData = json_decode($data);
 
-        return new Deal(
-            $dealData->current->id,
-            $dealData->current->value
-
-        );
+        return new Deal($dealData->current->id, $dealData->current->value);
     }
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool

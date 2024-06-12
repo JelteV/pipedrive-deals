@@ -11,7 +11,7 @@ class FieldDenormalizer implements DenormalizerInterface
     private const DEFAULT_NUMERIC_VALUE = 0.00;
     private const DEFAULT_VALUE = null;
 
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Field
     {
         $fieldData = json_decode($data);
 

@@ -59,5 +59,4 @@ class DealPaymentCalculator
 
         return $restAmount > 0;
     }
-
 }

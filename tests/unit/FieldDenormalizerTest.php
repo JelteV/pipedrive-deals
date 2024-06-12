@@ -38,6 +38,4 @@ class FieldDenormalizerTest extends TestCase
             ]
         ];
     }
-
-
 }

@@ -11,7 +11,6 @@ class BinnenKomendeDeals extends AbstractStage
         parent::__construct(1);
     }
 
-
     public function isApplicable(Deal $deal): bool
     {
         return $deal->getValue() <= 0;

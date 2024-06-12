@@ -11,7 +11,7 @@ class DealNormalizer implements NormalizerInterface
     /**
      * @param Deal $object
      */
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
         $data = ['stage_id' => $object->getStage()->getStageId()];
 
