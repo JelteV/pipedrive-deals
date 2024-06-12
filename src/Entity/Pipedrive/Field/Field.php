@@ -6,7 +6,10 @@ class Field
 {
     private mixed $value;
 
-    public function __construct(private readonly int $id, private readonly string $key) {}
+    public function __construct(private readonly int $id, private readonly string $key, $default_value)
+    {
+        $this->value = $default_value;
+    }
 
     public function getId(): int
     {

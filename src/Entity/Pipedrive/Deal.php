@@ -2,14 +2,13 @@
 
 namespace App\Entity\Pipedrive;
 
+use App\Entity\Pipedrive\Field\EntityField;
 use App\Entity\Pipedrive\Field\Field;
 
 class Deal
 {
     private int $id;
-
     private $value;
-
     private array $fields = [];
 
     public function __construct(int $id, mixed $value)
@@ -35,10 +34,15 @@ class Deal
 
     public function addField(Field $field): self
     {
-        if (!array_key_exists($field->getKey(), $this->fields)) {
-            $this->fields[$field->getKey()] = $field;
+        if (!array_key_exists($field->getId(), $this->fields)) {
+            $this->fields[$field->getId()] = $field;
         }
 
         return $this;
+    }
+
+    public function getField(EntityField $entityField): ?Field
+    {
+        return $this->fields[$entityField->value] ?? null;
     }
 }
