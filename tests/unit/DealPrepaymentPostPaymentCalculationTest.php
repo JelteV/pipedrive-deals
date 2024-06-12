@@ -18,9 +18,9 @@ class DealPrepaymentPostPaymentCalculationTest extends TestCase
     }
 
     /**
-     * @dataProvider testUnderPayCorrectionDataProvider
+     * @dataProvider underPaymentCorrectionDataProvider
      */
-    public function testUnderPayCorrection(Deal $deal): void
+    public function testUnderPaymentCorrection(Deal $deal): void
     {
         $prePayment = $deal->getField(EntityField::prePaymentField);
         $postPayment = $deal->getField(EntityField::postPaymentField);
@@ -61,7 +61,7 @@ class DealPrepaymentPostPaymentCalculationTest extends TestCase
         $this->assertEquals($deal->getValue(), $prePayment->getValue() + $postPayment->getValue());
     }
 
-    public static function testUnderPayCorrectionDataProvider(): array
+    public static function underPaymentCorrectionDataProvider(): array
     {
         return [
             [self::createDeal(10, 4, null)],
