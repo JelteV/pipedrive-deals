@@ -4,17 +4,15 @@ namespace App\Entity\Pipedrive;
 
 use App\Entity\Pipedrive\Field\EntityField;
 use App\Entity\Pipedrive\Field\Field;
+use App\Entity\Pipedrive\Stage\StageFactory;
+use App\Entity\Pipedrive\Stage\StageInterface;
 
 class Deal
 {
-    private int $id;
-    private $value;
     private array $fields = [];
 
-    public function __construct(int $id, mixed $value)
+    public function __construct(private readonly int $id, private mixed $value)
     {
-        $this->id = $id;
-        $this->value = $value;
     }
 
     public function getId(): int
@@ -30,6 +28,11 @@ class Deal
     public function setValue(mixed $value): void
     {
         $this->value = $value;
+    }
+
+    public function getStage(): StageInterface
+    {
+        return StageFactory::fromDeal($this);
     }
 
     public function addField(Field $field): self

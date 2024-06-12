@@ -13,7 +13,8 @@ class DealDenormalizer implements DenormalizerInterface
 
         return new Deal(
             $dealData->current->id,
-            $dealData->current->value,
+            $dealData->current->value
+
         );
     }
 

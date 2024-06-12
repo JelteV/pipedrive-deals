@@ -13,7 +13,7 @@ class DealNormalizer implements NormalizerInterface
      */
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
-        $data = [];
+        $data = ['stage_id' => $object->getStage()->getStageId()];
 
         /** @var Field $field */
         foreach ($object->getFields() as $field) {
