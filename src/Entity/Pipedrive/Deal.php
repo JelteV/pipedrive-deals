@@ -45,4 +45,9 @@ class Deal
     {
         return $this->fields[$entityField->value] ?? null;
     }
+
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
 }

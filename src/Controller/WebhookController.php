@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\DealPaymentCalculator;
 use App\Service\DealService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,7 @@ class WebhookController extends AbstractController
 {
     public function __construct(
         private readonly DealService           $dealService,
-        private readonly DealPaymentCalculator $dealPaymentCalculator,
+        private readonly DealPaymentCalculator $dealPaymentCalculator
     ) {}
 
     #[Route('/webhook/deal/notification', name: 'deal-notification')]
@@ -23,8 +24,10 @@ class WebhookController extends AbstractController
 
         if ($this->dealPaymentCalculator->isOverPaid($deal)) {
             $deal = $this->dealPaymentCalculator->correctOverPayment($deal);
+            $this->dealService->update($deal);
         } elseif ($this->dealPaymentCalculator->isUnderPaid($deal)) {
             $deal = $this->dealPaymentCalculator->correctUnderPayment($deal);
+            $this->dealService->update($deal);
         }
 
         return new Response(200);
