@@ -15,6 +15,9 @@ class DealPaymentCalculator
         if ($prePayment->getValue() >= $postPayment->getValue()) {
             $restAmount = $deal->getValue() - ($prePayment->getValue() + $postPayment->getValue());
             $postPayment->setValue($postPayment->getValue() + $restAmount);
+        } elseif ($postPayment->getValue() >= $prePayment->getValue()) {
+            $restAmount = $deal->getValue() - ($prePayment->getValue() + $postPayment->getValue());
+            $prePayment->setValue($postPayment->getValue() + $restAmount);
         }
 
         return $deal;
