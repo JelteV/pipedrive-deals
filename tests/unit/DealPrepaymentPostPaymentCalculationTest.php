@@ -32,7 +32,10 @@ class DealPrepaymentPostPaymentCalculationTest extends TestCase
             }
         }
 
-        $this->assertEquals($deal->getValue(), ($prePayment->getValue() + $postPayment->getValue()));
+        $this->assertEquals(
+            $deal->getValue(),
+            ($prePayment->getValue() + $postPayment->getValue())
+        );
     }
 
     /**
