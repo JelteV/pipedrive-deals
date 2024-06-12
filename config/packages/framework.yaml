@@ -8,6 +8,14 @@ framework:
 
     #esi: true
     #fragments: true
+    http_client:
+        scoped_clients:
+            pipedrive.client:
+                base_uri: "https://api.pipedrive.com"
+                query:
+                    api_token: "%env(PIPEDRIVE_API_TOKEN)%"
+                headers:
+                    content-type: "application/json"
 
 when@test:
     framework:
