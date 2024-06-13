@@ -30,12 +30,20 @@ class DealChangeDetector
         return $currentDealValue !== $previousDealValue;
     }
 
-    public function hasChangedDealStatus(Request $response): bool
+    public function hasChangedDealStatus(Request $request): bool
     {
-        $currentStatus = $this->getValue($response->toArray(), 'current', 'status');
-        $previousStatus = $this->getValue($response->toArray(), 'previous', 'status');
+        $currentStatus = $this->getValue($request->toArray(), 'current', 'status');
+        $previousStatus = $this->getValue($request->toArray(), 'previous', 'status');
 
         return $currentStatus !== $previousStatus;
+    }
+
+    public function hasChangedDealStage(Request $request): bool
+    {
+        $currentStageId = $this->getValue($request->toArray(), 'current', 'stage_id');
+        $previousStageId = $this->getValue($request->toArray(), 'previous', 'stage_id');
+
+        return $currentStageId !== $previousStageId;
     }
 
     private function getValue(array $data, string $block, string $element): mixed

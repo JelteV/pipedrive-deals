@@ -4,6 +4,8 @@ namespace App\Tests\unit;
 
 use App\Entity\Pipedrive\Field\EntityField;
 use App\Entity\Pipedrive\Field\Field;
+use App\Entity\Pipedrive\Stage\BinnenKomendeDeals;
+use App\Entity\Pipedrive\Stage\LageWaarde;
 use App\Service\DealChangeDetector;
 use App\Service\DealService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -38,6 +40,14 @@ class DealProcessableChangesTest extends KernelTestCase
     public function testHasDealStatusChanged(Request $request, bool $expected): void
     {
         $this->assertEquals($this->dealChangeDetector->hasChangedDealStatus($request), $expected);
+    }
+
+    /**
+     * @dataProvider hasChangedDealStageDataProvider
+     */
+    public function testHasChangedDealStage(Request $request, bool $expected)
+    {
+        $this->assertEquals($this->dealChangeDetector->hasChangedDealStage($request), $expected);
     }
 
     public static function hasChangedPaymentDetailsDataProvider(): array
@@ -102,6 +112,14 @@ class DealProcessableChangesTest extends KernelTestCase
             [self::createRequest(["current" => ['id' => 0, 'status' => 'won'], 'previous' => ['status' => 'open']]), true],
             [self::createRequest(["current" => ['id' => 0, 'status' => 'won'], 'previous' => ['status' => 'won']]), false],
             [self::createRequest(["current" => ['id' => 0, 'status' => null], 'previous' => ['status' => null]]), false],
+        ];
+    }
+
+    public static function hasChangedDealStageDataProvider(): array
+    {
+        return [
+            [self::createRequest(["current" => ['id' => 0, 'stage_id' => (new BinnenKomendeDeals())->getStageId()], 'previous' => ['stage_id' => (new LageWaarde())->getStageId()]]), true],
+            [self::createRequest(["current" => ['id' => 0, 'stage_id' => (new BinnenKomendeDeals())->getStageId()], 'previous' => ['stage_id' => (new BinnenKomendeDeals())->getStageId()]]), false]
         ];
     }
 
