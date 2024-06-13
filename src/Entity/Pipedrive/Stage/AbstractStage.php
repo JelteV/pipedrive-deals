@@ -14,4 +14,6 @@ abstract class AbstractStage implements StageInterface
     }
 
     abstract public function isApplicable(Deal $deal): bool;
+
+    abstract public function getLabel(): string;
 }

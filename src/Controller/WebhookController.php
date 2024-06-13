@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\DealPaymentCalculator;
 use App\Service\DealService;
+use App\Service\NoteService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class WebhookController extends AbstractController
 {
     public function __construct(
-        private readonly DealService           $dealService,
+        private readonly DealService $dealService,
+        private readonly NoteService $noteService,
         private readonly DealPaymentCalculator $dealPaymentCalculator
     ) {}
 
@@ -29,6 +31,10 @@ class WebhookController extends AbstractController
             }
 
             $this->dealService->update($deal);
+
+            if ($this->dealService->hasChangedDealStage($request)) {
+                $this->noteService->addDealNoteStageChanged($request);
+            }
         }
 
         return new Response(200);

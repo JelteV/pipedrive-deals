@@ -15,4 +15,9 @@ class HogeWaarde extends AbstractStage
     {
         return $deal->getValue() > 50;
     }
+
+    public function getLabel(): string
+    {
+        return 'Hoge waarde';
+    }
 }

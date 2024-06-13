@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Pipedrive\Deal;
 use App\Entity\Pipedrive\Field\EntityField;
+use App\Util\WebhookRequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class DealChangeDetector
@@ -13,41 +14,36 @@ class DealChangeDetector
         $prePaymentField = $deal->getField(EntityField::prePaymentField);
         $postPaymentField = $deal->getField(EntityField::postPaymentField);
 
-        $currentPrePaymentValue = $this->getValue($request->toArray(), 'current', $prePaymentField->getKey());
-        $previousPrePaymentValue = $this->getValue($request->toArray(), 'previous', $prePaymentField->getKey());
+        $currentPrePaymentValue = WebhookRequestHelper::getFieldFromRequest('current', $prePaymentField->getKey(), $request);
+        $previousPrePaymentValue = WebhookRequestHelper::getFieldFromRequest('previous', $prePaymentField->getKey(), $request);
 
-        $currentPostPaymentValue = $this->getValue($request->toArray(), 'current', $postPaymentField->getKey());
-        $previousPostPaymentValue = $this->getValue($request->toArray(), 'previous', $postPaymentField->getKey());
+        $currentPostPaymentValue = WebhookRequestHelper::getFieldFromRequest('current', $postPaymentField->getKey(), $request);
+        $previousPostPaymentValue = WebhookRequestHelper::getFieldFromRequest('previous', $postPaymentField->getKey(), $request);
 
         return $currentPrePaymentValue !== $previousPrePaymentValue || $currentPostPaymentValue !== $previousPostPaymentValue;
     }
 
     public function hasChangedDealValue(Request $request): bool
     {
-        $currentDealValue = $this->getValue($request->toArray(), 'current', 'value');
-        $previousDealValue = $this->getValue($request->toArray(), 'previous', 'value');
+        $currentDealValue = WebhookRequestHelper::getFieldFromRequest( 'current', 'value', $request);
+        $previousDealValue = WebhookRequestHelper::getFieldFromRequest('previous', 'value', $request);
 
         return $currentDealValue !== $previousDealValue;
     }
 
     public function hasChangedDealStatus(Request $request): bool
     {
-        $currentStatus = $this->getValue($request->toArray(), 'current', 'status');
-        $previousStatus = $this->getValue($request->toArray(), 'previous', 'status');
+        $currentStatus = WebhookRequestHelper::getFieldFromRequest('current', 'status', $request);
+        $previousStatus = WebhookRequestHelper::getFieldFromRequest('previous', 'status', $request);
 
         return $currentStatus !== $previousStatus;
     }
 
     public function hasChangedDealStage(Request $request): bool
     {
-        $currentStageId = $this->getValue($request->toArray(), 'current', 'stage_id');
-        $previousStageId = $this->getValue($request->toArray(), 'previous', 'stage_id');
+        $currentStageId = WebhookRequestHelper::getFieldFromRequest('current', 'stage_id', $request);
+        $previousStageId = WebhookRequestHelper::getFieldFromRequest( 'previous', 'stage_id', $request);
 
         return $currentStageId !== $previousStageId;
-    }
-
-    private function getValue(array $data, string $block, string $element): mixed
-    {
-        return $data[$block][$element];
     }
 }

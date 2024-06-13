@@ -125,6 +125,6 @@ class DealProcessableChangesTest extends KernelTestCase
 
     private static function createRequest(array $body): Request
     {
-        return Request::create('foo.bar', 'POST', [], [], [], [], json_encode($body, false));
+        return Request::create('foo.bar', Request::METHOD_POST, [], [], [], [], json_encode($body, false));
     }
 }

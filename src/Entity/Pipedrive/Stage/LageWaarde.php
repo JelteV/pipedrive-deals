@@ -15,4 +15,9 @@ class LageWaarde extends AbstractStage
     {
         return $deal->getValue() > 0 && $deal->getValue() < 50;
     }
+
+    public function getLabel(): string
+    {
+        return 'Lage waarde';
+    }
 }

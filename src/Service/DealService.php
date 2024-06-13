@@ -10,15 +10,17 @@ use App\Serializer\DealNormalizer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class DealService
+class DealService extends AbstractWebService
 {
     public function __construct(
-        private readonly HttpClientInterface $pipedriveClient,
+        HttpClientInterface $pipedriveClient,
         private readonly FieldService $fieldService,
         private readonly DealChangeDetector $dealChangeDetector,
         private readonly DealDenormalizer $dealDenormalizer,
         private readonly DealNormalizer $dealNormalizer
-    ) {}
+    ) {
+        parent::__construct($pipedriveClient);
+    }
 
     public function fromWebhookData(Request $request): Deal
     {
@@ -43,7 +45,13 @@ class DealService
 
         return $this->dealChangeDetector->hasChangedPaymentDetails($request, $deal)
             || $this->dealChangeDetector->hasChangedDealValue($request)
-            || $this->dealChangeDetector->hasChangedDealStatus($request);
+            || $this->dealChangeDetector->hasChangedDealStatus($request)
+            || $this->dealChangeDetector->hasChangedDealStage($request);
+    }
+
+    public function hasChangedDealStage(Request $request): bool
+    {
+        return $this->dealChangeDetector->hasChangedDealStage($request);
     }
 
     public function update(Deal $deal)

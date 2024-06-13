@@ -15,4 +15,9 @@ class BinnenKomendeDeals extends AbstractStage
     {
         return $deal->getValue() <= 0;
     }
+
+    public function getLabel(): string
+    {
+        return 'Binnenkomende deals';
+    }
 }

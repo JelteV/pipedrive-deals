@@ -16,4 +16,9 @@ class GewonnenDeals extends AbstractStage
     {
         return $deal->getStatus() == Status::won->value;
     }
+
+    public function getLabel(): string
+    {
+        return 'Gewonnen deals';
+    }
 }

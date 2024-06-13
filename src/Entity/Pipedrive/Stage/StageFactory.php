@@ -18,6 +18,21 @@ class StageFactory
         return new BinnenKomendeDeals();
     }
 
+    public static function getById(int $stageId): ?StageInterface
+    {
+        $foundStage = null;
+
+        /** @var StageInterface $stage */
+        foreach (static::getStages() as $stage) {
+            if ($stage->getStageId() === $stageId) {
+                $foundStage = $stage;
+                break;
+            }
+        }
+
+        return $foundStage;
+    }
+
     private static function getStages(): array
     {
         return [
