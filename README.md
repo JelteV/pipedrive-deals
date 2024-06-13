@@ -9,7 +9,8 @@ This project has four branches:
 * feature/deel-2
 * feature/deel-3
 
-All the non-main branches are based of the main branch. After completing a feature its merged back into main.
+All the non-main branches are based of the main branch. After completing a feature its merged back into main. For
+testing all the project features make sure to check out the `main` branch.
 
 # Prerequisites
 
