@@ -7,6 +7,7 @@ use App\Entity\Pipedrive\Field\EntityField;
 use App\Entity\Pipedrive\Field\Field;
 use App\Serializer\DealDenormalizer;
 use App\Serializer\DealNormalizer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DealService
@@ -14,13 +15,16 @@ class DealService
     public function __construct(
         private readonly HttpClientInterface $pipedriveClient,
         private readonly FieldService $fieldService,
+        private readonly DealChangeDetector $dealChangeDetector,
         private readonly DealDenormalizer $dealDenormalizer,
         private readonly DealNormalizer $dealNormalizer
     ) {}
 
-    public function fromWebhookData($data): Deal
+    public function fromWebhookData(Request $request): Deal
     {
-        $deal = $this->dealDenormalizer->denormalize($data, Deal::class);
+        $data = $request->getContent();
+        $deal = $this->dealDenormalizer->denormalize($request->getContent(), Deal::class);
+
         $this->populateFields(
             $data,
             $deal,
@@ -31,6 +35,15 @@ class DealService
         );
 
         return $deal;
+    }
+
+    public function hasProcessableChanges(Request $request): bool
+    {
+        $deal = $this->fromWebhookData($request);
+
+        return $this->dealChangeDetector->hasChangedPaymentDetails($request, $deal)
+            || $this->dealChangeDetector->hasChangedDealValue($request)
+            || $this->dealChangeDetector->hasChangedDealStatus($request);
     }
 
     public function update(Deal $deal)

@@ -11,7 +11,7 @@ class DealDenormalizer implements DenormalizerInterface
     {
         $dealData = json_decode($data);
 
-        return new Deal($dealData->current->id, $dealData->current->value);
+        return new Deal($dealData->current->id, $dealData->current->value, $dealData->current->status);
     }
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool

@@ -19,13 +19,15 @@ class WebhookController extends AbstractController
     #[Route('/webhook/deal/notification', name: 'deal-notification')]
     public function deal(Request $request): Response
     {
-        $deal = $this->dealService->fromWebhookData($request->getContent());
+        $deal = $this->dealService->fromWebhookData($request);
 
-        if ($this->dealPaymentCalculator->isOverPaid($deal)) {
-            $deal = $this->dealPaymentCalculator->correctOverPayment($deal);
-            $this->dealService->update($deal);
-        } elseif ($this->dealPaymentCalculator->isUnderPaid($deal)) {
-            $deal = $this->dealPaymentCalculator->correctUnderPayment($deal);
+        if ($this->dealService->hasProcessableChanges($request)) {
+            if ($this->dealPaymentCalculator->isOverPaid($deal)) {
+                $deal = $this->dealPaymentCalculator->correctOverPayment($deal);
+            } elseif ($this->dealPaymentCalculator->isUnderPaid($deal)) {
+                $deal = $this->dealPaymentCalculator->correctUnderPayment($deal);
+            }
+
             $this->dealService->update($deal);
         }
 

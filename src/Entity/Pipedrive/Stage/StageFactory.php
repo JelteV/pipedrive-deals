@@ -21,6 +21,7 @@ class StageFactory
     private static function getStages(): array
     {
         return [
+            new GewonnenDeals(),
             new BinnenKomendeDeals(),
             new LageWaarde(),
             new HogeWaarde()

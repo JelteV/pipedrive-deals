@@ -11,7 +11,7 @@ class Deal
 {
     private array $fields = [];
 
-    public function __construct(private readonly int $id, private mixed $value)
+    public function __construct(private readonly int $id, private mixed $value, private readonly string $status)
     {
     }
 
@@ -28,6 +28,11 @@ class Deal
     public function setValue(mixed $value): void
     {
         $this->value = $value;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     public function getStage(): StageInterface
