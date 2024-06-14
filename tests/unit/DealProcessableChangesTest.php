@@ -2,28 +2,30 @@
 
 namespace App\Tests\unit;
 
+use App\Entity\Pipedrive\Deal;
 use App\Entity\Pipedrive\Field\EntityField;
 use App\Entity\Pipedrive\Field\Field;
 use App\Service\DealChangeDetector;
 use App\Service\DealService;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class DealProcessableChangesTest extends KernelTestCase
+class DealProcessableChangesTest extends TestCase
 {
-    private DealService $dealService;
     private DealChangeDetector $dealChangeDetector;
 
     public function setUp(): void
     {
         $this->dealChangeDetector = new DealChangeDetector();
-        $this->dealService = self::getContainer()->get(DealService::class);
     }
 
     /** @dataProvider hasChangedPaymentDetailsDataProvider */
     public function testHasChangedPaymentDetails(Request $request, bool $expected): void
     {
-        $deal = $this->dealService->fromWebhookData($request);
+        $dealServiceMock = $this->createMock(DealService::class);
+        $dealServiceMock->method('fromWebhookData')->willReturn($this->createDeal());
+
+        $deal = $dealServiceMock->fromWebhookData($request);
 
         $this->assertEquals($this->dealChangeDetector->hasChangedPaymentDetails($request, $deal), $expected);
     }
@@ -103,6 +105,15 @@ class DealProcessableChangesTest extends KernelTestCase
             [self::createRequest(["current" => ['id' => 0, 'status' => 'won'], 'previous' => ['status' => 'won']]), false],
             [self::createRequest(["current" => ['id' => 0, 'status' => null], 'previous' => ['status' => null]]), false],
         ];
+    }
+
+    private static function createDeal(): Deal
+    {
+        $deal = new Deal(0, 5, 'open');
+        $deal->addField(new Field(EntityField::prePaymentField->value, 'abe5e7a3b992b7c3ff539cab747e65e5cd7ea4da', 0.0));
+        $deal->addField(new Field(EntityField::postPaymentField->value, '210171ff329a4d3e90f48653eb7b1f4c813538ca', 0.0));
+
+        return $deal;
     }
 
     private static function createRequest(array $body): Request
