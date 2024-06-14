@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Pipedrive\Stage\StageFactory;
+use App\Entity\Pipedrive\Stage\StageInterface;
 use App\Util\WebhookRequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -24,21 +25,28 @@ class NoteService extends AbstractWebService
             (int) WebhookRequestHelper::getFieldFromRequest('previous', 'stage_id', $request)
         );
 
-        $this->pipedriveClient->request(
-            Request::METHOD_POST,
-            '/v1/notes',
-            [
-                'json' => [
-                    'deal_id' => $dealId,
-                    'content' => sprintf(
-                        "Deal moved from stage: %s(%d) to %s(%d) source: pipedrive-deals",
-                        $previousStage->getLabel(),
-                        $previousStage->getStageId(),
-                        $currentStage->getLabel(),
-                        $currentStage->getStageId()
-                    )
+        if ($currentStage && $previousStage) {
+            $this->pipedriveClient->request(
+                Request::METHOD_POST,
+                '/v1/notes',
+                [
+                    'json' => [
+                        'deal_id' => $dealId,
+                        'content' => $this->createNoteMessage($currentStage, $previousStage)
+                    ]
                 ]
-            ]
+            );
+        }
+    }
+
+    private function createNoteMessage(?StageInterface $currentStage, ?StageInterface $previousStage): string
+    {
+        return sprintf(
+            "Deal moved from stage: %s(%d) to %s(%d) source: pipedrive-deals",
+            $previousStage->getLabel(),
+            $previousStage->getStageId(),
+            $currentStage->getLabel(),
+            $currentStage->getStageId()
         );
     }
 }

@@ -44,6 +44,6 @@ class DealChangeDetector
         $currentStageId = WebhookRequestHelper::getFieldFromRequest('current', 'stage_id', $request);
         $previousStageId = WebhookRequestHelper::getFieldFromRequest( 'previous', 'stage_id', $request);
 
-        return $currentStageId !== $previousStageId;
+        return $currentStageId !== $previousStageId && $previousStageId !== 0;
     }
 }
